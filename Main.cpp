@@ -1,7 +1,8 @@
 /*Gráficas Computacionales
 Fecha: 16-ago-2017
 Scarlett Omaña Silva A01373419*/
-
+//ljg*/
+/*dshola mundo*/
 #include <iostream>
 int numeromayor;
 int numeromenor;
@@ -136,6 +137,15 @@ bool EsPrimo(int x) {
 	return true;
 }
 
+/*bool EsPrimo(int numero){
+if (numero <=0)
+return false;
+for(int i=2; i < numero;i++){
+if(numero % i == 0) 
+return false;
+}
+return true
+}*/
 
 int main() {
 	int p = PerimetroRectangulo(5, 3);
