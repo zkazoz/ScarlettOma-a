@@ -1,7 +1,8 @@
 #include "Rectangle.h"
-
+//rectangle
 Rectangle::Rectangle() {
 	_width = 1.0;
+	_height = 1.0;
 	
 
 }
