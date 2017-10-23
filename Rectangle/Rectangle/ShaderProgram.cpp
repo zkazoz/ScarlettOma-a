@@ -1,5 +1,3 @@
-#include "ShaderProgram.h"
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -7,28 +5,62 @@
 #include <GL/freeglut.h>
 #include <glm/glm.hpp>
 #include <vector>
+#include "ShaderProgram.h"
+#include <memory>
 
-GLuint _programHandle;
-vector<unique_ptr<Shader>> _attachedShaders;
-
-void CreateProgram() {
-
-	_programHandle = glCreateProgram();
-	glBindAttribLocation(_programHandle, 0, "VertexPosition");
-	glBindAttribLocation(_programHandle, 1, "'VertexColor");
-	glLinkProgram(_programHandle);
+ShaderProgram::ShaderProgram()
+{
+	_programHandle = 0;
 }
 
+void ShaderProgram::createProgram()
+{
+	_programHandle = glCreateProgram();
+}
+void ShaderProgram::attachShader(std::string name, GLenum type)
+{
 
-	void ShaderProgram::AttachShader(std::string name, GLenum type)
-	{
-		// Create and add the shaders to a list
-		std::unique_ptr<Shader> shader(new Shader);
-		shader->CreateShader(name, type);
-		_attachedShaders.push_back(std::move(shader));
+	std::unique_ptr<Shader> shader(new Shader);
+	shader->createShader(name, type);
+	_attachedShaders.push_back(std::move(shader));
+}
+void ShaderProgram::linkProgram()
+{
+	for (int i = 0; i < _attachedShaders.size(); i++) {
+		glAttachShader(_programHandle, _attachedShaders[i]->getHandle());
 	}
+	glLinkProgram(_programHandle);
+	deleteAndDetachShaders();
 
-	void LinkProgram() {
-		glAttachShader(_attachedShaders);
-		}
+}
 
+void ShaderProgram::deleteAndDetachShaders()
+{
+	for (int i = 0; i < _attachedShaders.size(); i++) {
+		glDetachShader(_programHandle, _attachedShaders[i]->getHandle());
+	}
+	_attachedShaders.clear();
+
+}
+void ShaderProgram::activate()
+{
+	glUseProgram(_programHandle);
+}
+void ShaderProgram::deactivate()
+{
+
+	glUseProgram(0);
+}
+void ShaderProgram::setAttribute(GLuint locationIndex, std::string name)
+{
+	glBindAttribLocation(_programHandle, locationIndex, name.c_str());
+}
+void ShaderProgram::deleteProgram()
+{
+	deleteAndDetachShaders();
+	glDeleteProgram(_programHandle);
+}
+ShaderProgram::ShaderProgram(){
+	deleteProgram();
+	
+}

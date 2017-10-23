@@ -1,24 +1,19 @@
-#pragma once
-class Mesh
-{
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+class Mesh {
+private:
+	void SetAttributeData(GLuint& buffer, const GLsizeiptr size, const void* data, GLenum usage, GLuint locationIndex, const GLint components);
+	GLuint _vertexArrayObject;
+	GLuint _positionsVertexBufferObject;
+	GLuint _colorsVertexBufferObject;
+	GLuint _vertexCount;
 public:
 	Mesh();
+	~Mesh();
 	void CreateMesh(GLint vertexCount);
 	void Draw(GLenum primitive);
-	void SetPositionAttribute(glm::vec2 positions, GLenum usage, GLuint locationIndex);
-	void SetPositionAttribute(glm::vec3 positions, GLenum usage, GLuint locationIndex);
-	void SetColorAttribute(glm::vec3 positions, GLenum usage, GLuint locationIndex);
-	void SetColorAttribute(glm::vec4 positions, GLenum usage, GLuint locationIndex);
-
-	
-private:
-	Mesh();
-	void SetAttributeData(GLuint& buffer, const GLsizeiptr size, const void* data, GLenum usage, GLuint locationIndex, const GLint components);
-	GLuint _vertexArrayObject = 0;
-	GLuint _positionsVertexBufferObject = 3;
-	GLuint _colorsVertexBufferObject = 3;
-	GLuint _vertexCount = 4; 
-
-
+	void SetPositionAttribute(std::vector<glm::vec2> positions, GLenum usage, GLuint locatonIndex);
+	void SetPositionAttribute(std::vector<glm::vec3>positions, GLenum usage, GLuint locatonIndex);
+	void SetColorAttribute(std::vector <glm::vec3> positions, GLenum usage, GLuint locatonIndex);
+	void SetColorAttribute(std::vector <glm::vec4> positions, GLenum usage, GLuint locatonIndex);
 };
-

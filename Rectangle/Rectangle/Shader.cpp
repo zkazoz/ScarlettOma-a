@@ -1,6 +1,3 @@
-#include "Shader.h"
-#include "InputFile.h"
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -8,24 +5,37 @@
 #include <GL/freeglut.h>
 #include <glm/glm.hpp>
 #include <vector>
+#include "Shader.h"
+#include "InputFile.h"
 
-
-GLuint _shaderHandle = 0;
-void CreateShader(std::string path, GLenum type)
+Shader::Shader()
 {
+	_shaderHandle = 0;
+
+}
+
+Shader::~Shader()
+{
+	glDeleteShader(_shaderHandle);
+
+}
+void Shader::createShader(std::string path, GLenum type)
+{
+	if (_shaderHandle > 0) {
+		glDeleteShader(_shaderHandle);
+	}
 	InputFile ifile;
 
-	ifile.Read("Path.vert");
-	std::string vertexSource = ifile.GetContents();
-	const GLchar *vertexSource_c =
-		(const GLchar*)vertexSource.c_str();
-	GLuint _shaderHandle = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(_shaderHandle, 1, &vertexSource_c, nullptr);
+	ifile.Read(path);
+	std::string shaderSource = ifile.GetContents();
+	const GLchar shaderSource_c = (const GLchar)shaderSource.c_str();
+	_shaderHandle = glCreateShader(type);
+	glShaderSource(_shaderHandle, 1, &shaderSource_c, nullptr);
 	glCompileShader(_shaderHandle);
 
 	GLint vertexShaderCompileSuccess = 0;
-	glGetShaderiv(_shaderHandle, GL_COMPILE_STATUS, &vertexShaderCompileSuccess);
-
+	glGetShaderiv(_shaderHandle, GL_COMPILE_STATUS,
+		&vertexShaderCompileSuccess);
 	if (vertexShaderCompileSuccess == GL_FALSE)
 	{
 		GLint logLength = 0;
@@ -33,24 +43,21 @@ void CreateShader(std::string path, GLenum type)
 		if (logLength > 0)
 		{
 			std::vector<GLchar> compileLog(logLength);
-			glGetShaderInfoLog(_shaderHandle, logLength, &logLength, &compileLog[0]);
+			glGetShaderInfoLog(_shaderHandle, logLength, &logLength,
+				&compileLog[0]);
 
-			for (int i = 0; i < logLength; i++) {
+			for (int i = 0; i < logLength; i++)
+			{
 				std::cout << compileLog[i];
-
 			}
 			std::cout << std::endl;
 		}
-		std::cout << "Shader Defaultvert did not compiled" << std::endl;
-
+		std::cout << "Shader Default.vert did not compiled." << std::endl;
 	}
-
-	
 }
 
 
-GLuint GetHandle() {
+GLuint Shader::getHandle() {
+
 	return _shaderHandle;
-}
-
-
+};
