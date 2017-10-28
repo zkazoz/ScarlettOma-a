@@ -12,9 +12,7 @@ Transform::Transform()
 	_rotation = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, 0.0f)));
 	_position = glm::vec3(0, 0, 0);
 	_scale = glm::vec3(1.0, 1.0, 1.0);
-
-
-}
+	}
 
 glm::mat4 Transform::GetModelMatrix() {
 
@@ -40,10 +38,24 @@ void Transform::setPosition(float x, float y, float z) {
 	updateModelMatrix();
 }
 void Transform::setRotation(float x, float y, float z) {
-	_rotation = glm::vec3(x, y, z);
+	_rotation = glm::vec3(glm::radians(glm::vec3(x, y, z)));
 	updateModelMatrix();
 }
 void Transform::setScale(float x, float y, float z) {
-	_rotation = glm::vec3(x, y, z);
+	_scale = glm::vec3(x, y, z);
 	updateModelMatrix();
+}
+
+void Transform::updateModelMatrix() {
+
+	_modelMatrix = glm::mat4_cast(_rotation);
+
+	_modelMatrix[0]= _modelMatrix[0]* _scale[0];
+	_modelMatrix[1]= _modelMatrix[1] * _scale[1];
+	_modelMatrix[2]= _modelMatrix[2] * _scale[2];
+
+	_modelMatrix[3][0] = _position[0];
+	_modelMatrix[3][1] = _position[1];
+	_modelMatrix[3][2] = _position[2];
+
 }
