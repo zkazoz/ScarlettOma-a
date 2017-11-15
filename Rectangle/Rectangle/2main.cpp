@@ -18,6 +18,13 @@ ShaderProgram _shaderProgram;
 // Función que va a inicializar toda la memoria del programa.
 void Initialize()
 {
+
+	//setunifmor
+
+	glm::vec3 setUniform (LightColor);
+
+
+
 	// Vamos a crear una lista que va a almacenar las posiciones
 	// en 2 dimensiones de un triángulo.
 	// Esto es en CPU y RAM.
@@ -88,7 +95,41 @@ void Initialize()
 	colors.push_back(glm::vec3(0.5f, 0.5f, 1.0f));
 	colors.push_back(glm::vec3(0.4f, 0.5f, 1.0f));
 	colors.push_back(glm::vec3(0.5f, 0.5f, 1.0f));
+	
+	//Normales
 
+	std::vector<glm::vec3> normals;
+	// Cara frontal
+	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
+	// Cara lateral derecha
+	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	//Cara Trasera
+	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+	//Cara lateral izquierda
+	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
+	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
+	//Cara Superior
+	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+
+	//Cara Inferior 
+	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
+	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
 
 
 	std::vector<unsigned int> indices = { 0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7,8,9,10,8,10,11,12,14,15,12,13,14,16,18,19,16,17,18,20,22,23,20,21,22 };
@@ -110,8 +151,11 @@ void Initialize()
 	
 
 	_transform2.SetScale(5.0f, 0.2f, 10.0f);
+	
+	Transform GetModelMatrix;
 
 }
+
 
 void MainLoop()
 {
@@ -206,10 +250,13 @@ int main(int argc, char* argv[])
 
 	// Configurar la memoria que la aplicación va a necesitar.
 	Initialize();
+	//la poition de la luz
+	//activar shader, ahacer uniforms y desactivar. 
 
 	// Iniciamos la aplicacion gráfica. El main se pausará en estea línea
 	// hasta que se cierre la ventana de OpenGL.
 	glutMainLoop();
+	//
 
 	return 0;
 }
