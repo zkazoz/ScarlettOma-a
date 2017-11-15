@@ -8,6 +8,7 @@
 #include "ShaderProgram.h"
 #include "Transform.h"
 
+
 Camera _camera;
 Mesh _mesh;
 Transform _transform;
@@ -88,46 +89,13 @@ void Initialize()
 	colors.push_back(glm::vec3(0.4f, 0.5f, 1.0f));
 	colors.push_back(glm::vec3(0.5f, 0.5f, 1.0f));
 
-	//Lista de normales
-	std::vector<glm::vec3> normals;
-	// Cara frontal
-	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-	// Cara lateral derecha
-	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	normals.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	//Cara Trasera
-	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-	normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
-	//Cara lateral izquierda
-	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
-	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
-	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
-	normals.push_back(glm::vec3(-1.0f, 0.0f, 0.0f));
-	//Cara Superior
-	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	normals.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
 
-	//Cara Inferior 
-	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
-	normals.push_back(glm::vec3(0.0f, -1.0f, 0.0f));
 
 	std::vector<unsigned int> indices = { 0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7,8,9,10,8,10,11,12,14,15,12,13,14,16,18,19,16,17,18,20,22,23,20,21,22 };
 
 	_mesh.CreateMesh(24);
 	_mesh.SetPositionAttribute(positions, GL_STATIC_DRAW, 0);
 	_mesh.SetColorAttribute(colors, GL_STATIC_DRAW, 1);
-	_mesh.SetNormalAttribute(normals, GL_STATIC_DRAW, 2);
 	_mesh.SetIndices(indices, GL_STATIC_DRAW);
 
 	_shaderProgram.CreateProgram();
@@ -135,42 +103,34 @@ void Initialize()
 	_shaderProgram.AttachShader("Default.frag", GL_FRAGMENT_SHADER);
 	_shaderProgram.SetAttribute(0, "VertexPosition");
 	_shaderProgram.SetAttribute(1, "VertexColor");
-	_shaderProgram.SetAttribute(2, "VertexNormal");
 	_shaderProgram.LinkProgram();
 
 	_transform.SetPosition(0.0f, 0.0f, -20.0f);
 	_transform2.SetPosition(0.0f, -10.0f, -20.0f);
+	
 
-
+	_transform2.SetScale(5.0f, 0.2f, 10.0f);
 
 }
-
-
 
 void MainLoop()
 {
 	// Borramos el buffer de color y profundidad siempre al inicio de un nuevo frame.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	_transform.Rotate(0.06f, 0.08f, 0.02f, true);
+	_transform.Rotate(0.02f, 0.02f, 0.02f, true);
 
 
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("NormalMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("ModelMatrix", _transform.GetModelMatrix());
-
-
 	_mesh.Draw(GL_TRIANGLES);
 	_shaderProgram.Deactivate();
 
-	_transform2.SetScale(6.0f, 0.5f, 6.0f);
+	_transform2.Rotate(0.0f, 0.0f, 0.0f, true);
 
 
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform2.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("NormalMatrix", _camera.GetViewProjection() * _transform2.GetModelMatrix());
-	_shaderProgram.SetUniformMatrix("ModelMatrix", _camera.GetViewProjection() * _transform2.GetModelMatrix());
 	_mesh.Draw(GL_TRIANGLES);
 	_shaderProgram.Deactivate();
 
@@ -192,7 +152,6 @@ void Idle()
 void ReshapeWindow(int width, int height)
 {
 	glViewport(0, 0, width, height);
-	_camera.SetPerspective(1.0f, 1000.0f, 60.0f, (float)width / (float)height);
 }
 
 int main(int argc, char* argv[])
