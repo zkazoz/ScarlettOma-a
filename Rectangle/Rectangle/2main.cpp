@@ -21,11 +21,7 @@ void Initialize()
 
 	//setunifmor
 
-	glm::vec3 setUniform (LightColor);
-
-
-
-	// Vamos a crear una lista que va a almacenar las posiciones
+		// Vamos a crear una lista que va a almacenar las posiciones
 	// en 2 dimensiones de un triángulo.
 	// Esto es en CPU y RAM.
 	std::vector<glm::vec3> positions;
@@ -86,10 +82,10 @@ void Initialize()
 	colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
 	colors.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
 	//Cara superior
-	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
-	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
-	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
-	colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+	colors.push_back(glm::vec3(0.0f,0.50f, 0.50f));
+	colors.push_back(glm::vec3(0.0f, 0.50f, 0.50f));
+	colors.push_back(glm::vec3(0.0f, 0.50f, 0.50f));
+	colors.push_back(glm::vec3(0.0f, 0.50f, 0.50f));
 	//Cara inferior
 	colors.push_back(glm::vec3(0.5f, 0.5f, 1.0f));
 	colors.push_back(glm::vec3(0.5f, 0.5f, 1.0f));
@@ -137,6 +133,7 @@ void Initialize()
 	_mesh.CreateMesh(24);
 	_mesh.SetPositionAttribute(positions, GL_STATIC_DRAW, 0);
 	_mesh.SetColorAttribute(colors, GL_STATIC_DRAW, 1);
+	_mesh.SetNormalAttribute(normals, GL_STATIC_DRAW, 2);
 	_mesh.SetIndices(indices, GL_STATIC_DRAW);
 
 	_shaderProgram.CreateProgram();
@@ -144,13 +141,16 @@ void Initialize()
 	_shaderProgram.AttachShader("Default.frag", GL_FRAGMENT_SHADER);
 	_shaderProgram.SetAttribute(0, "VertexPosition");
 	_shaderProgram.SetAttribute(1, "VertexColor");
+	_shaderProgram.SetAttribute(2, "VertexNormal");
 	_shaderProgram.LinkProgram();
 
+
+
 	_transform.SetPosition(0.0f, 0.0f, -20.0f);
-	_transform2.SetPosition(0.0f, -10.0f, -20.0f);
+	_transform2.SetPosition(0.0f, -9.0f, -20.0f);
 	
 
-	_transform2.SetScale(5.0f, 0.2f, 10.0f);
+	_transform2.SetScale(10.0f, 0.2f, 30.0f);
 	
 	Transform GetModelMatrix;
 
@@ -167,7 +167,13 @@ void MainLoop()
 
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("ModelMatrix", _transform.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("NormalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform.GetModelMatrix()))));
+	_shaderProgram.SetUniformf("LightColor", 1.0f, 1.0f, 1.0f);
+	_shaderProgram.SetUniformf("LightPosition", -5.0f, 5.0f, 5.0f);
+	_shaderProgram.SetUniformf("CameraPosition", 0.0f, 0.0f, 0.0f);
 	_mesh.Draw(GL_TRIANGLES);
+
 	_shaderProgram.Deactivate();
 
 	_transform2.Rotate(0.0f, 0.0f, 0.0f, true);
@@ -175,9 +181,14 @@ void MainLoop()
 
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform2.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("ModelMatrix", _transform2.GetModelMatrix());
+	_shaderProgram.SetUniformMatrix("NormalMatrix", glm::transpose(glm::inverse(glm::mat3(_transform2.GetModelMatrix()))));
+	_shaderProgram.SetUniformf("LightColor", 1.0f, 1.0f, 1.0f);
+	_shaderProgram.SetUniformf("LightPosition", -5.0f, 5.0f, 5.0f);
+	_shaderProgram.SetUniformf("CameraPosition", 0.0f, 0.0f, 0.0f);
 	_mesh.Draw(GL_TRIANGLES);
+	
 	_shaderProgram.Deactivate();
-
 
 	// Intercambiar los buffers (el que se estaba rendereando con el que se estaba
 	// mostrando).
