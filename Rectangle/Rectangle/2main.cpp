@@ -195,18 +195,24 @@ void MainLoop()
 	glutSwapBuffers();
 }
 
+
+
 void Idle()
 {
+
 	// Cuando OpenGL entra en modo de reposo 
 	// (para guardar bateria, por ejemplo)
 	// le decimos que vuelva a dibujar ->
 	// Vuelve a mandar a llamar GameLoop
 	glutPostRedisplay();
-}
+
+	}
+
 
 void ReshapeWindow(int width, int height)
 {
 	glViewport(0, 0, width, height);
+	_camera.SetPerspective(1.0f, 1000.0f, 60.0f, (float)width / (float)height);
 }
 
 int main(int argc, char* argv[])
