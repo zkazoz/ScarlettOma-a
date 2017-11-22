@@ -7,6 +7,8 @@
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Transform.h"
+#include <IL/il.h>
+#include "texture2d.h"
 
 
 Camera _camera;
@@ -14,12 +16,45 @@ Mesh _mesh;
 Transform _transform;
 Transform _transform2;
 ShaderProgram _shaderProgram;
+texture2d myTexture;
+
 
 // Función que va a inicializar toda la memoria del programa.
 void Initialize()
 {
+	std::vector<glm::vec2> textureid;
+	// Cara frontal
 
-	//setunifmor
+	textureid.push_back(glm::vec2(0.0f, 1.0f));
+	textureid.push_back(glm::vec2(0.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 1.0f));
+	// Cara lateral derecha
+	textureid.push_back(glm::vec2(0.0f, 1.0f));
+	textureid.push_back(glm::vec2(0.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 1.0f));
+	//Cara Trasera
+	textureid.push_back(glm::vec2(0.0f, 1.0f));
+	textureid.push_back(glm::vec2(0.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 1.0f));
+	//Cara lateral izquierda
+	textureid.push_back(glm::vec2(0.0f, 1.0f));
+	textureid.push_back(glm::vec2(0.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 1.0f));
+	//Cara Superior
+	textureid.push_back(glm::vec2(0.0f, 1.0f));
+	textureid.push_back(glm::vec2(0.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 1.0f));
+	//Cara Inferior
+	textureid.push_back(glm::vec2(0.0f, 1.0f));
+	textureid.push_back(glm::vec2(0.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 0.0f));
+	textureid.push_back(glm::vec2(1.0f, 1.0f));
+
 
 		// Vamos a crear una lista que va a almacenar las posiciones
 	// en 2 dimensiones de un triángulo.
@@ -131,10 +166,11 @@ void Initialize()
 	std::vector<unsigned int> indices = { 0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7,8,9,10,8,10,11,12,14,15,12,13,14,16,18,19,16,17,18,20,22,23,20,21,22 };
 
 	_mesh.CreateMesh(24);
+	_mesh.SetIndices(indices, GL_STATIC_DRAW);
 	_mesh.SetPositionAttribute(positions, GL_STATIC_DRAW, 0);
 	_mesh.SetColorAttribute(colors, GL_STATIC_DRAW, 1);
 	_mesh.SetNormalAttribute(normals, GL_STATIC_DRAW, 2);
-	_mesh.SetIndices(indices, GL_STATIC_DRAW);
+	_mesh.SetTexCoordAttribute(textureid, GL_STATIC_DRAW,3);
 
 	_shaderProgram.CreateProgram();
 	_shaderProgram.AttachShader("Default.vert", GL_VERTEX_SHADER);
@@ -142,8 +178,9 @@ void Initialize()
 	_shaderProgram.SetAttribute(0, "VertexPosition");
 	_shaderProgram.SetAttribute(1, "VertexColor");
 	_shaderProgram.SetAttribute(2, "VertexNormal");
-	_shaderProgram.LinkProgram();
+	_shaderProgram.SetAttribute(3, "VertexTexCoord");
 
+	_shaderProgram.LinkProgram();
 
 
 	_transform.SetPosition(0.0f, 0.0f, -20.0f);
@@ -153,6 +190,8 @@ void Initialize()
 	_transform2.SetScale(10.0f, 0.2f, 30.0f);
 	
 	Transform GetModelMatrix;
+	
+	myTexture.LoadTexture("iomerengues.jpeg");
 
 }
 
@@ -164,6 +203,7 @@ void MainLoop()
 
 	_transform.Rotate(0.02f, 0.02f, 0.02f, true);
 
+	
 
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
@@ -172,7 +212,13 @@ void MainLoop()
 	_shaderProgram.SetUniformf("LightColor", 1.0f, 1.0f, 1.0f);
 	_shaderProgram.SetUniformf("LightPosition", -5.0f, 5.0f, 5.0f);
 	_shaderProgram.SetUniformf("CameraPosition", 0.0f, 0.0f, 0.0f);
+	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	myTexture.Bind();
 	_mesh.Draw(GL_TRIANGLES);
+	glActiveTexture(GL_TEXTURE0);
+	myTexture.Unbind();
 
 	_shaderProgram.Deactivate();
 
@@ -186,10 +232,19 @@ void MainLoop()
 	_shaderProgram.SetUniformf("LightColor", 1.0f, 1.0f, 1.0f);
 	_shaderProgram.SetUniformf("LightPosition", -5.0f, 5.0f, 5.0f);
 	_shaderProgram.SetUniformf("CameraPosition", 0.0f, 0.0f, 0.0f);
+	_shaderProgram.SetUniformi("DiffuseTexture", 0);
+	
+	glActiveTexture(GL_TEXTURE0);
+	myTexture.Bind();
 	_mesh.Draw(GL_TRIANGLES);
+	glActiveTexture(GL_TEXTURE0);
+	myTexture.Unbind();
 	
 	_shaderProgram.Deactivate();
 
+
+	
+	
 	// Intercambiar los buffers (el que se estaba rendereando con el que se estaba
 	// mostrando).
 	glutSwapBuffers();
@@ -247,8 +302,20 @@ int main(int argc, char* argv[])
 	// cuando OpenGL entre en modo de reposo.
 	glutIdleFunc(Idle);
 
-	// Inicializamos GLEW. Esta librería se encarga de obtener el API
+	// Inicializar DevIL. Esto se debe hacer sólo una vez.
+	ilInit();
+	// Cambiar el punto de origen de las texturas. Por default, DevIL
+	// pone un punto de origen en la esquina superior izquierda.
+	// Esto es compatible con el sistema operativo, pero no con el
+	// funcionamiento de OpenGL.
+	ilEnable(IL_ORIGIN_SET);
+	// Configurar el punto de origen de las texturas en la esquina
+	// inferior izquierda
+	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+
+		// Inicializamos GLEW. Esta librería se encarga de obtener el API
 	// de OpenGL de nuestra tarjeta de video. SHAME ON YOU MICROSOFT.
+		
 	glewInit();
 
 	// COnfigurar OpenGL. Este es el color por default del buffer de color
@@ -263,7 +330,10 @@ int main(int argc, char* argv[])
 	// No dibujar las caras traseras de las geometrías.
 	glCullFace(GL_BACK);
 
+
 	std::cout << glGetString(GL_VERSION) << std::endl;
+
+
 
 	// Configurar la memoria que la aplicación va a necesitar.
 	Initialize();

@@ -11,6 +11,8 @@ out vec3 PixelPosition;
 uniform mat4 mvpMatrix;
 uniform mat4 ModelMatrix;
 uniform mat3 NormalMatrix;
+in vec2 VertexTexCoord;
+out vec2 InterpolatedTexCoord;
 
 void main()
 {
@@ -18,5 +20,6 @@ void main()
 	gl_Position = mvpMatrix * vec4(VertexPosition, 1.0f);
 	InterpolatedNormal = NormalMatrix*VertexNormal;
 	PixelPosition= vec3(ModelMatrix* vec4(VertexPosition, 1.0f));
+	InterpolatedTexCoord = VertexTexCoord;
 
 }

@@ -11,6 +11,9 @@ uniform vec3 LightPosition;
 uniform vec3 LightColor;
 uniform vec3 CameraPosition;
 
+in vec2 InterpolatedTexCoord;
+uniform sampler2D DiffuseTexture;
+
 
 void main()
 {
@@ -29,9 +32,9 @@ void main()
 	
 
 	vec3 phong = (ambient + diffuse + specular)* InterpolatedColor;
-
-	
 	FragColor = vec4 (phong, 1.0f);
+	FragColor = texture2D(DiffuseTexture, InterpolatedTexCoord);
+	
 
 
 }
