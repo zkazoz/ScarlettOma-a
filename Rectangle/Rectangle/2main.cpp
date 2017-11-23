@@ -15,6 +15,14 @@ Camera _camera;
 Mesh _mesh;
 Transform _transform;
 Transform _transform2;
+Transform _transform3;
+Transform _transform4;
+Transform _transform5;
+Transform _joint1;
+Transform _joint2;
+Transform _joint3;
+Transform _joint4;
+Transform _joint5;
 ShaderProgram _shaderProgram;
 texture2d myTexture;
 
@@ -61,38 +69,38 @@ void Initialize()
 	// Esto es en CPU y RAM.
 	std::vector<glm::vec3> positions;
 	// Cara frontal
-	positions.push_back(glm::vec3(-3.0f, -3.0f, 3.0f));
-	positions.push_back(glm::vec3(3.0f, -3.0f, 3.0f));
-	positions.push_back(glm::vec3(3.0f, 3.0f, 3.0f));
-	positions.push_back(glm::vec3(-3.0f, 3.0f, 3.0f));
+	positions.push_back(glm::vec3(-10.0f, -0.4f, 10.0f));
+	positions.push_back(glm::vec3(10.0f, -0.4f, 10.0f));
+	positions.push_back(glm::vec3(10.0f, 0.4f, 10.0f));
+	positions.push_back(glm::vec3(-10.0f, 0.4f, 10.0f));
 	// Cara lateral derecha
-	positions.push_back(glm::vec3(3.0f, -3.0f, 3.0f));
-	positions.push_back(glm::vec3(3.0f, -3.0f, -3.0f));
-	positions.push_back(glm::vec3(3.0f, 3.0f, -3.0f));
-	positions.push_back(glm::vec3(3.0f, 3.0f, 3.0f));
+	positions.push_back(glm::vec3(10.0f, -0.4f, 10.0f));
+	positions.push_back(glm::vec3(10.0f, -0.4f, -10.0f));
+	positions.push_back(glm::vec3(10.0f,  0.4f, -10.0f));
+	positions.push_back(glm::vec3(10.0f, 0.4f, 10.0f));
 	//Cara Trasera
-	positions.push_back(glm::vec3(3.0f, -3.0f, -3.0f));
-	positions.push_back(glm::vec3(-3.0f, -3.0f, -3.0f));
-	positions.push_back(glm::vec3(-3.0f, 3.0f, -3.0f));
-	positions.push_back(glm::vec3(3.0f, 3.0f, -3.0f));
+	positions.push_back(glm::vec3(10.0f, -0.4f, -10.0f));
+	positions.push_back(glm::vec3(-10.0f, -0.4f, -10.0f));
+	positions.push_back(glm::vec3(-10.0f, 0.4f, -10.0f));
+	positions.push_back(glm::vec3(10.0f, 0.4f, -10.0f));
 	//Cara lateral izquierda
-	positions.push_back(glm::vec3(-3.0f, -3.0f, -3.0f));
-	positions.push_back(glm::vec3(-3.0f, -3.0f, 3.0f));
-	positions.push_back(glm::vec3(-3.0f, 3.0f, 3.0f));
-	positions.push_back(glm::vec3(-3.0f, 3.0f, -3.0f));
+	positions.push_back(glm::vec3(-10.0f, -0.4f, -10.0f));
+	positions.push_back(glm::vec3(-10.0f, -0.4f, 10.0f));
+	positions.push_back(glm::vec3(-10.0f, 0.4f, 10.0f));
+	positions.push_back(glm::vec3(-10.0f, 0.4f, -10.0f));
 	//Cara Superior
-	positions.push_back(glm::vec3(-3.0f, 3.0f, 3.0f));
-	positions.push_back(glm::vec3(3.0f, 3.0f, 3.0f));
-	positions.push_back(glm::vec3(3.0f, 3.0f, -3.0f));
-	positions.push_back(glm::vec3(-3.0f, 3.0f, -3.0f));
+	positions.push_back(glm::vec3(-10.0f, 0.4f, 10.0f));
+	positions.push_back(glm::vec3(10.0f, 0.4f, 10.0f));
+	positions.push_back(glm::vec3(10.0f, 0.4f, -10.0f));
+	positions.push_back(glm::vec3(-10.0f, 0.4f, -10.0f));
 
 	//Cara Inferior 
-	positions.push_back(glm::vec3(-3.0f, -3.0f, -3.0f));
-	positions.push_back(glm::vec3(3.0f, -3.0f, -3.0f));
-	positions.push_back(glm::vec3(3.0f, -3.0f, 3.0f));
-	positions.push_back(glm::vec3(-3.0f, -3.0f, 3.0f));
+	positions.push_back(glm::vec3(-10.0f, -0.4f, -10.0f));
+	positions.push_back(glm::vec3(10.0f, -0.4f, -10.0f));
+	positions.push_back(glm::vec3(10.0f, -0.4f, 10.0f));
+	positions.push_back(glm::vec3(-10.0f, -0.4f, 10.0f));
 
-
+	
 	// Vamos a crear una lista para almacenar colores RGB
 	// Esta lista está en CPU y RAM
 	std::vector<glm::vec3> colors;
@@ -182,12 +190,15 @@ void Initialize()
 
 	_shaderProgram.LinkProgram();
 
-
+	_transform.SetRotation(4.0f, 0.0f, 0.0f);
 	_transform.SetPosition(0.0f, 0.0f, -20.0f);
-	_transform2.SetPosition(0.0f, -9.0f, -20.0f);
+	/*transform2.SetPosition(0.0f, -9.0f, -20.0f);
+	_transform3.SetPosition(0.0f, -9.0f, -20.0f);
+	_transform4.SetPosition(0.0f, -9.0f, -20.0f);
+	_transform5.SetPosition(0.0f, -9.0f, -20.0f);*/
 	
 
-	_transform2.SetScale(10.0f, 0.2f, 30.0f);
+	//_transform2.SetScale(10.0f, 0.2f, 30.0f);
 	
 	Transform GetModelMatrix;
 	
@@ -200,10 +211,9 @@ void MainLoop()
 {
 	// Borramos el buffer de color y profundidad siempre al inicio de un nuevo frame.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	_transform.Rotate(0.02f, 0.02f, 0.02f, true);
-
 	
+	//cubo1
+	//_transform.Rotate(0.02f, 0.02f, 0.02f, true);
 
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform.GetModelMatrix());
@@ -222,8 +232,9 @@ void MainLoop()
 
 	_shaderProgram.Deactivate();
 
-	_transform2.Rotate(0.0f, 0.0f, 0.0f, true);
+	//cubo2
 
+	//_transform2.Rotate(0.0f, 0.0f, 0.0f, true);
 
 	_shaderProgram.Activate();
 	_shaderProgram.SetUniformMatrix("mvpMatrix", _camera.GetViewProjection() * _transform2.GetModelMatrix());
